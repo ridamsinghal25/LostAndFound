@@ -3,10 +3,10 @@ import jwt from "jsonwebtoken";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 
-const verifyJWT = asyncHandler(async (req, res) => {
+const verifyJWT = asyncHandler(async (req, res, next) => {
   try {
     const token =
-      req.cookie?.accessToken ||
+      req.cookies?.accessToken ||
       req.header("Authorization")?.replace("Bearer ", "");
 
     if (!token) {
@@ -15,7 +15,7 @@ const verifyJWT = asyncHandler(async (req, res) => {
 
     const decodedToken = await jwt.verify(
       token,
-      process.env.ACCESS_TOKEN_SCERET
+      process.env.ACCESS_TOKEN_SECRET
     );
 
     const user = await User.findById(decodedToken._id).select(
@@ -29,7 +29,7 @@ const verifyJWT = asyncHandler(async (req, res) => {
     req.user = user;
     next();
   } catch (error) {
-    console.log("Error: ", error.message || "Invalid user token");
+    throw new ApiError(401, error?.message || "Invalid access token");
   }
 });
 
