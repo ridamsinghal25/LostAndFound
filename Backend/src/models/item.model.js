@@ -1,28 +1,29 @@
 import mongoose, { Schema } from "mongoose";
 
 const itemSchema = Schema({
-  productName: {
+  itemName: {
     type: String,
-    required: [true, "Product name is required"],
+    required: [true, "Item name is required"],
   },
-  placeAtWhichProductLost: {
+  placeAtItemLost: {
     type: String,
     required: [true, "Place information is required"],
   },
-  personName: {
+  username: {
     type: String,
     required: [true, "owner name is required"],
   },
-  phoneNo: {
+  phoneNumber: {
     type: Number,
     required: [true, "phone number is required"],
   },
-  specificDescriptionOfProuduct: {
+  description: {
     type: String,
     required: [true, "Require to validate you are true owner"],
   },
   photos: [
     {
+      public_id: String,
       url: String,
     },
   ],
