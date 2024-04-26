@@ -31,6 +31,19 @@ const userSchema = new Schema(
       type: Number,
       required: [true, "phone number is required"],
     },
+    avatar: {
+      type: {
+        public_id: {
+          type: String,
+          default: "",
+        },
+        url: {
+          type: String,
+          default: "default_avatar.png",
+        },
+      },
+      required: true,
+    },
   },
   { timestamps: true }
 );
