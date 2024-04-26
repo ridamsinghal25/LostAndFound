@@ -27,16 +27,13 @@ const userSchema = new Schema(
       type: String,
       required: [true, "password is required"],
     },
-    phoneNo: {
+    phoneNumber: {
       type: Number,
       required: [true, "phone number is required"],
     },
   },
   { timestamps: true }
 );
-
-console.log("userSchema", userSchema);
-console.log("userSchema", userSchema.methods);
 
 userSchema.pre("save", function (next) {
   if (!this.isModified("password")) return next();
