@@ -6,7 +6,7 @@ const dbConnect = async () => {
       `${process.env.MONGO_URI}/lostandfound`
     );
 
-    console.log("Connection : ", connectionToDB.connection());
+    console.log("Connection : ", connectionToDB.connection.host);
 
     return connectionToDB;
   } catch (error) {
