@@ -1,42 +1,67 @@
-import { useEffect, useState } from "react";
-import { Header } from "./components";
-import { Outlet } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { login, logout } from "./slices/authSlice";
-import { Loader } from "./components/index";
-import authService from "./api/auth";
+import { Routes, Route } from "react-router-dom";
+import { AuthLayout, Header } from "./components";
+import SignupPage from "./pages/SignupPage.jsx";
+import LoginPage from "./pages/LoginPage.jsx";
+import Home from "./pages/Home.jsx";
+import ListItem from "./pages/ListItem.jsx";
+import AllItems from "./pages/AllItems.jsx";
+import FoundItem from "./pages/FoundItem.jsx";
 
 function App() {
-  const [loading, setLoading] = useState(false);
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      setLoading(true);
-      authService
-        .getCurrentUser()
-        .then((userData) => {
-          if (userData) {
-            const user = userData.data.data;
-            dispatch(login({ user }));
-          } else {
-            dispatch(logout());
-          }
-        })
-        .finally(() => setLoading(false));
-    }
-  }, [isAuthenticated]);
-
-  return !loading ? (
+  return (
     <>
       <Header />
-      <main>
-        <Outlet />
-      </main>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <AuthLayout authentication>
+              <Home />
+            </AuthLayout>
+          }
+        />
+        <Route
+          path="/signup"
+          element={
+            <AuthLayout authentication={false}>
+              <SignupPage />
+            </AuthLayout>
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <AuthLayout authentication={false}>
+              <LoginPage />
+            </AuthLayout>
+          }
+        />
+        <Route
+          path="/list-lost-item"
+          element={
+            <AuthLayout authentication>
+              <ListItem />
+            </AuthLayout>
+          }
+        />
+        <Route
+          path="/found-item"
+          element={
+            <AuthLayout authentication>
+              <FoundItem />
+            </AuthLayout>
+          }
+        />
+        <Route
+          path="/all-items"
+          element={
+            <AuthLayout authentication>
+              <AllItems />
+            </AuthLayout>
+          }
+        />
+      </Routes>
     </>
-  ) : (
-    <Loader />
   );
 }
 
