@@ -52,38 +52,8 @@ const registerLostItem = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, item, "Item registered successfully"));
 });
 
-const updateLostItem = asyncHandler(async (req, res) => {
-  const { itemName, placeAtItemLost, username, phoneNumber, description } =
-    req.body;
-  const { itemId } = req.params;
-
-  if (
-    [itemName, placeAtItemLost, username, phoneNumber, description].some(
-      (field) => field?.trim() === "" || !field
-    )
-  ) {
-    throw new ApiError(400, "All fields are required");
-  }
-
-  if (!isValidObjectId(itemId)) {
-    throw new ApiError(400, "Invalid item id");
-  }
-
-  const item = await Item.findByIdAndUpdate(
-    itemId,
-    {
-      $set: {
-        itemName,
-        placeAtItemLost,
-        username,
-        phoneNumber,
-        description,
-      },
-    },
-    {
-      new: true,
-    }
-  );
+const getLostItem = asyncHandler(async (req, res) => {
+  const item = await Item.find({ type: "lost" });
 
   if (!item) {
     throw new ApiError(404, "item not found");
@@ -91,7 +61,7 @@ const updateLostItem = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(200, item, "item updated successfully"));
+    .json(new ApiResponse(200, item, "item received successfully"));
 });
 
 const deleteLostItem = asyncHandler(async (req, res) => {
@@ -140,4 +110,22 @@ const itemFound = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, item, "item found successfully"));
 });
 
-export { registerLostItem, updateLostItem, deleteLostItem, itemFound };
+const getFoundItem = asyncHandler(async (req, res) => {
+  const item = await Item.find({ type: "found" });
+
+  if (!item) {
+    throw new ApiError(404, "item not found");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, item, "item received successfully"));
+});
+
+export {
+  registerLostItem,
+  getLostItem,
+  deleteLostItem,
+  itemFound,
+  getFoundItem,
+};
