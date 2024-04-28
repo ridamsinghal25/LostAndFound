@@ -3,8 +3,7 @@ import { AuthLayout, Header } from "./components";
 import SignupPage from "./pages/SignupPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import Home from "./pages/Home.jsx";
-import ListItem from "./pages/ListItem.jsx";
-import AllItems from "./pages/AllItems.jsx";
+import AddItem from "./pages/AddItem.jsx";
 import FoundItem from "./pages/FoundItem.jsx";
 
 function App() {
@@ -37,10 +36,10 @@ function App() {
           }
         />
         <Route
-          path="/list-lost-item"
+          path="/list-item"
           element={
             <AuthLayout authentication>
-              <ListItem />
+              <AddItem />
             </AuthLayout>
           }
         />
@@ -53,11 +52,9 @@ function App() {
           }
         />
         <Route
-          path="/all-items"
+          path="/setting"
           element={
-            <AuthLayout authentication>
-              <AllItems />
-            </AuthLayout>
+            <AuthLayout authentication>{/* <FoundItem /> */}</AuthLayout>
           }
         />
       </Routes>
