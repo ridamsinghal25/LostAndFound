@@ -42,16 +42,6 @@ function Login() {
 
   return (
     <div className="min-h-screen bg-[#121212]">
-      <header className="fixed top-0 z-10 mx-auto flex w-full max-w-full items-center justify-between border-b-[1px] border-b-slate-300 bg-[#121212] p-4 text-white lg:px-10">
-        <h1 className="text-xl font-extrabold md:text-3xl">Login</h1>
-        <div className="flex w-max flex-shrink-0 items-center justify-end gap-6">
-          <Link to="/signup">
-            <Button className="hidden w-max items-center justify-center border-[1px] border-white p-3 text-center font-bold text-white md:inline-flex">
-              Register
-            </Button>
-          </Link>
-        </div>
-      </header>
       <div className="mx-auto flex w-full items-stretch justify-between gap-10">
         <div className="fixed left-0 top-0 hidden h-screen w-0 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 md:block md:w-1/3"></div>
         <div className="ml-auto mt-28 flex w-full flex-col items-start justify-start p-6 sm:max-w-4xl md:w-2/3 lg:px-10">
@@ -101,9 +91,16 @@ function Login() {
                 className="w-full border-[1px] border-white bg-black p-4 text-white placeholder:text-gray-500"
                 {...register("password", {
                   required: "password is required",
+                  validate: {
+                    matchPassword: (value) =>
+                      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/gm.test(
+                        value
+                      ) ||
+                      "Password must contain 1 uppercase and lowercase letter and a numeric digit",
+                  },
                   minLength: {
                     value: 6,
-                    message: "password should be of more than 6 characters",
+                    message: "password should be of more than 8 characters",
                   },
                 })}
               />
