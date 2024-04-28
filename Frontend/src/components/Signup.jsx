@@ -3,6 +3,7 @@ import { Input, Button } from "../components";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import authService from "../api/auth";
+import { PhotoAddIcon } from "../assets";
 
 function Signup() {
   const [error, setError] = useState("");
@@ -32,16 +33,6 @@ function Signup() {
 
   return (
     <div className="min-h-screen bg-[#121212]">
-      <header className="fixed top-0 z-10 mx-auto flex w-full max-w-full items-center justify-between border-b-[1px] border-b-slate-300 bg-[#121212] p-4 text-white lg:px-10">
-        <h1 className="text-xl font-extrabold md:text-3xl">Register</h1>
-        <div className="flex w-max flex-shrink-0 items-center justify-end gap-6">
-          <Link to="/login">
-            <Button className="hidden w-max items-center justify-center border-[1px] border-white p-3 text-center font-bold text-white md:inline-flex">
-              Login
-            </Button>
-          </Link>
-        </div>
-      </header>
       <div className="mx-auto flex w-full items-stretch justify-between gap-10">
         <div className="fixed left-0 top-0 hidden h-screen w-0 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 md:block md:w-1/3"></div>
         <div className="ml-auto mt-28 flex w-full flex-col items-start justify-start p-6 sm:max-w-4xl md:w-2/3 lg:px-10">
@@ -58,10 +49,11 @@ function Signup() {
             onSubmit={handleSubmit(registerUser)}
             className="my-14 flex w-full flex-col items-start justify-start gap-4"
           >
-            <div className="flex w-96 pl-20 items-center justify-center ">
+            <div className="flex w-96 items-center justify-center ">
               <Input
                 id="avatar-input-1"
-                hidden=""
+                hidden
+                accept=".jpg, .png"
                 type="file"
                 {...register("avatar", {
                   required: "user avatar is required",
@@ -79,49 +71,16 @@ function Signup() {
                   />
                 ) : (
                   <div>
-                    <div className="flex h-full w-full items-center justify-center rounded-full">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth="1.5"
-                        stroke="currentColor"
-                        aria-hidden="true"
-                        className="h-8 w-8 text-white"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M12 4.5v15m7.5-7.5h-15"
-                        ></path>
-                      </svg>
-                    </div>
-                    <span className="absolute bottom-0 right-0 flex aspect-square h-5 w-5 items-center justify-center rounded-full bg-[#ae7aff] p-1">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth="1.5"
-                        stroke="currentColor"
-                        aria-hidden="true"
-                        className="h-3 w-3 text-black"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M12 4.5v15m7.5-7.5h-15"
-                        ></path>
-                      </svg>
-                    </span>
+                    <PhotoAddIcon />
                   </div>
                 )}
               </label>
-              {errors.avatar?.message && (
-                <p className="text-red-500 italic">
-                  &#9888; {errors.avatar?.message}
-                </p>
-              )}
             </div>
+            {errors.avatar?.message && (
+              <p className="text-red-500 italic">
+                &#9888; {errors.avatar?.message}
+              </p>
+            )}
             <div className="flex w-full flex-col items-start justify-start gap-2">
               <label className="text-xs text-slate-200">Full name</label>
               <Input
@@ -130,9 +89,14 @@ function Signup() {
                 className="w-full border-[1px] border-white bg-black p-4 text-white placeholder:text-gray-500"
                 {...register("fullName", {
                   required: "full name is required",
-                  minLength: {
-                    value: 5,
-                    message: "Full name must be atleast 5 characters",
+                  validate: {
+                    matchFullName: (value) =>
+                      /^[a-zA-Z]+(?: [a-zA-Z]+)*$/.test(value) ||
+                      "Full name must be alphabetic characters",
+                  },
+                  maxLength: {
+                    value: 15,
+                    message: "Full name cannot be more than 15 characters",
                   },
                 })}
               />
@@ -150,6 +114,15 @@ function Signup() {
                 className="w-full border-[1px] border-white bg-black p-4 text-white placeholder:text-gray-500"
                 {...register("username", {
                   required: "username is required",
+                  validate: {
+                    matchUsername: (value) =>
+                      /^[A-Za-z][A-Za-z0-9]*$/.test(value) ||
+                      "Please enter a valid username",
+                  },
+                  maxLength: {
+                    value: 15,
+                    message: "username cannot be more than 15 characters",
+                  },
                 })}
               />
               {errors.username?.message && (
@@ -189,9 +162,16 @@ function Signup() {
                 className="w-full border-[1px] border-white bg-black p-4 text-white placeholder:text-gray-500"
                 {...register("password", {
                   required: "password is required",
+                  validate: {
+                    matchPassword: (value) =>
+                      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/gm.test(
+                        value
+                      ) ||
+                      "Password must contain 1 uppercase and lowercase letter and a numeric digit",
+                  },
                   minLength: {
-                    value: 6,
-                    message: "password should be of more than 6 characters",
+                    value: 8,
+                    message: "password should be of more than 8 characters",
                   },
                 })}
               />
@@ -210,9 +190,10 @@ function Signup() {
                 className="w-full border-[1px] border-white bg-black p-4 text-white placeholder:text-gray-500"
                 {...register("phoneNumber", {
                   required: "phone number is required",
-                  minLength: {
-                    value: 10,
-                    message: "Please enter a valid phone number",
+                  validate: {
+                    matchPhoneNumber: (value) =>
+                      /^(?:\+91)?(?:\d{10})$/.test(value) ||
+                      "Please enter a valid phone number",
                   },
                 })}
               />
