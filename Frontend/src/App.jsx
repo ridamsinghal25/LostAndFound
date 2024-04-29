@@ -5,6 +5,7 @@ import LoginPage from "./pages/LoginPage.jsx";
 import Home from "./pages/Home.jsx";
 import AddItem from "./pages/AddItem.jsx";
 import FoundItem from "./pages/FoundItem.jsx";
+import PageNotFound from "./pages/PageNotFound.jsx";
 
 function App() {
   return (
@@ -57,6 +58,8 @@ function App() {
             <AuthLayout authentication>{/* <FoundItem /> */}</AuthLayout>
           }
         />
+
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
     </>
   );
