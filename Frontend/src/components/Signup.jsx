@@ -49,7 +49,7 @@ function Signup() {
             onSubmit={handleSubmit(registerUser)}
             className="my-14 flex w-full flex-col items-start justify-start gap-4"
           >
-            <div className="flex w-96 items-center justify-center ">
+            <div className="flex flex-col justify-center items-center w-full">
               <Input
                 id="avatar-input-1"
                 hidden
