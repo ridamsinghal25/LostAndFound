@@ -7,7 +7,6 @@ const userSchema = new Schema(
     fullName: {
       type: String,
       required: [true, "fullName is required"],
-      minLength: [5, "fullName must be atleast 5 characters"],
     },
     email: {
       type: String,
@@ -18,11 +17,6 @@ const userSchema = new Schema(
         "Please fill a valid email address",
       ],
     },
-    username: {
-      type: String,
-      required: [true, "username is required"],
-      unique: true,
-    },
     password: {
       type: String,
       required: [true, "password is required"],
@@ -30,6 +24,11 @@ const userSchema = new Schema(
     phoneNumber: {
       type: Number,
       required: [true, "phone number is required"],
+      unique: true,
+      validate: {
+        validator: (value) => /^(\+\d{1,3}\s?)?\d{10}$/.test(value),
+        message: (prop) => `${prop.value} is not valid phone number`,
+      },
     },
     avatar: {
       type: {
@@ -42,7 +41,7 @@ const userSchema = new Schema(
           default: "default_avatar.png",
         },
       },
-      required: true,
+      required: [true, "Avatar is required"],
     },
   },
   { timestamps: true }
