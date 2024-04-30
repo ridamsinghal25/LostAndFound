@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import {
   LogoIcon,
   CancelButtonIcon,
@@ -12,30 +12,6 @@ import { Button, AuthButtons } from "../index";
 
 function Header() {
   const [navBar, setNavBar] = useState(true);
-  const navigate = useNavigate();
-
-  const navItems = [
-    {
-      name: "Home",
-      slug: "/",
-      svg: <HomeIcon />,
-    },
-    {
-      name: "Add Items",
-      slug: "/list-item",
-      svg: <PlusIcon />,
-    },
-    {
-      name: "Found Items",
-      slug: "/found-item",
-      svg: <CollectionIcon />,
-    },
-    {
-      name: "Setting",
-      slug: "/setting",
-      svg: <SettingIcon />,
-    },
-  ];
 
   function toggleNavBar() {
     setNavBar(!navBar);
@@ -69,19 +45,74 @@ function Header() {
                   </Button>
                 </div>
                 <ul className="my-4 flex w-full flex-wrap gap-2 px-4 sm:hidden text-white">
-                  {navItems.map((item) => (
-                    <li key={item.slug} className="w-full">
-                      <Button
-                        onClick={() => navigate(item.slug)}
-                        className="flex w-full items-center justify-start gap-x-4 border border-white px-4 py-1.5 text-left hover:bg-[#ae7aff] hover:text-black focus:border-[#ae7aff] focus:bg-[#ae7aff] focus:text-black"
-                      >
-                        <span className="inline-block w-full max-w-[20px] group-hover:mr-4 lg:mr-4">
-                          {item.svg}
-                        </span>
-                        <span>{item.name}</span>
-                      </Button>
-                    </li>
-                  ))}
+                  <li className="w-full">
+                    <NavLink
+                      to="/"
+                      className={({ isActive }) =>
+                        `flex w-full items-center justify-start ${
+                          isActive
+                            ? "bg-[#ae7aff] border-white"
+                            : "bg-[#121212]"
+                        } gap-x-4 border border-white px-4 py-1.5 text-left hover:bg-[#ae7aff] hover:text-black focus:border-[#ae7aff] focus:bg-[#ae7aff] focus:text-black`
+                      }
+                    >
+                      <span className="inline-block w-full max-w-[20px] group-hover:mr-4 lg:mr-4">
+                        <HomeIcon />
+                      </span>
+                      <span>Home</span>
+                    </NavLink>
+                  </li>
+                  <li className="w-full">
+                    <NavLink
+                      to="/list-item"
+                      className={({ isActive }) =>
+                        `flex w-full items-center justify-start ${
+                          isActive
+                            ? "bg-[#ae7aff] border-white"
+                            : "bg-[#121212]"
+                        } gap-x-4 border border-white px-4 py-1.5 text-left hover:bg-[#ae7aff] hover:text-black focus:border-[#ae7aff] focus:bg-[#ae7aff] focus:text-black`
+                      }
+                    >
+                      <span className="inline-block w-full max-w-[20px] group-hover:mr-4 lg:mr-4">
+                        <PlusIcon />
+                      </span>
+                      <span>Add Item</span>
+                    </NavLink>
+                  </li>
+                  <li className="w-full">
+                    <NavLink
+                      to="/found-item"
+                      className={({ isActive }) =>
+                        `flex w-full items-center justify-start ${
+                          isActive
+                            ? "bg-[#ae7aff] border-white"
+                            : "bg-[#121212]"
+                        } gap-x-4 border border-white px-4 py-1.5 text-left hover:bg-[#ae7aff] hover:text-black focus:border-[#ae7aff] focus:bg-[#ae7aff] focus:text-black`
+                      }
+                    >
+                      <span className="inline-block w-full max-w-[20px] group-hover:mr-4 lg:mr-4">
+                        <CollectionIcon />
+                      </span>
+                      <span>Found Item</span>
+                    </NavLink>
+                  </li>
+                  <li className="w-full">
+                    <NavLink
+                      to="/setting"
+                      className={({ isActive }) =>
+                        `flex w-full items-center justify-start ${
+                          isActive
+                            ? "bg-[#ae7aff] border-white"
+                            : "bg-[#121212]"
+                        } gap-x-4 border border-white px-4 py-1.5 text-left hover:bg-[#ae7aff] hover:text-black focus:border-[#ae7aff] focus:bg-[#ae7aff] focus:text-black`
+                      }
+                    >
+                      <span className="inline-block w-full max-w-[20px] group-hover:mr-4 lg:mr-4">
+                        <SettingIcon />
+                      </span>
+                      <span>Setting</span>
+                    </NavLink>
+                  </li>
                 </ul>
                 <div className="mb-8 mt-auto  flex w-full flex-wrap gap-4 px-4 sm:mb-0 sm:mt-0 sm:items-center sm:px-0">
                   <AuthButtons />
