@@ -3,6 +3,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { User } from "../models/user.model.js";
 import { uploadToCloudinary } from "../utils/cloudinary.js";
+import bcrypt from "bcryptjs";
 
 const generateAccessTokenAndRefreshToken = async (userId) => {
   try {
@@ -26,23 +27,23 @@ const generateAccessTokenAndRefreshToken = async (userId) => {
 };
 
 const registerUser = asyncHandler(async (req, res) => {
-  const { fullName, username, email, password, phoneNumber } = req.body;
+  const { fullName, email, password, phoneNumber } = req.body;
 
   if (
-    [fullName, username, email, password, phoneNumber].some(
+    [fullName, email, password, phoneNumber].some(
       (field) => field?.trim() === "" || !field
     )
   ) {
     throw new ApiError(400, "All fields are required");
   }
 
-  const userExists = await User.findOne({
-    $or: [{ username }, { email }],
-  });
+  const userExists = await User.findOne({ email });
 
   if (userExists) {
-    throw new ApiError(400, "User with email or username already exists");
+    throw new ApiError(400, "User with email already exists");
   }
+
+  const hashedPassword = await bcrypt.hash(password, 12);
 
   let avatarLocalPath = req.file?.path;
 
@@ -59,13 +60,12 @@ const registerUser = asyncHandler(async (req, res) => {
   const user = await User.create({
     fullName,
     email,
-    password,
+    password: hashedPassword,
     phoneNumber: parseInt(phoneNumber),
     avatar: {
       public_id: avatar.public_id,
       url: avatar.url,
     },
-    username: username.toLowerCase(),
   });
 
   const createdUser = await User.findById(user._id).select(
@@ -82,15 +82,13 @@ const registerUser = asyncHandler(async (req, res) => {
 });
 
 const loginUser = asyncHandler(async (req, res) => {
-  const { username, email, password } = req.body;
+  const { email, password } = req.body;
 
-  if (!username && !email) {
-    throw new ApiError(400, "Username or email is required");
+  if (!email || !password) {
+    throw new ApiError(400, "Email is required");
   }
 
-  const user = await User.findOne({
-    $or: [{ username }, { email }],
-  });
+  const user = await User.findOne({ email });
 
   if (!user) {
     throw new ApiError(404, "user not found");
