@@ -158,4 +158,46 @@ const getCurrentUserDetails = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, req.user, "user details fetched successfully"));
 });
 
-export { registerUser, loginUser, logoutUser, getCurrentUserDetails };
+const updateUserDetails = asyncHandler(async (req, res) => {
+  const { fullName, email, phoneNumber } = req.body;
+  const userId = req.user._id;
+
+  if (
+    [fullName, email, phoneNumber].some(
+      (field) => field?.trim() === "" || !field
+    )
+  ) {
+    throw new ApiError(400, "All fields are required");
+  }
+
+  const updatedUser = await User.findByIdAndUpdate(
+    userId,
+    {
+      $set: {
+        fullName,
+        email,
+        phoneNumber,
+      },
+    },
+    { runValidators: true },
+    { new: true }
+  ).select("-password -refreshToken");
+
+  if (!updatedUser) {
+    throw new ApiError(500, "Something went wrong while updating user");
+  }
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, updatedUser, "user details updated successfully")
+    );
+});
+
+export {
+  registerUser,
+  loginUser,
+  logoutUser,
+  getCurrentUserDetails,
+  updateUserDetails,
+};

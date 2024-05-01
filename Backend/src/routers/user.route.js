@@ -5,6 +5,7 @@ import {
   loginUser,
   logoutUser,
   registerUser,
+  updateUserDetails,
 } from "../controllers/user.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 
@@ -17,5 +18,7 @@ router.route("/login").post(loginUser);
 router.route("/logout").post(verifyJWT, logoutUser);
 
 router.route("/current-user").get(verifyJWT, getCurrentUserDetails);
+
+router.route("/update-user").post(verifyJWT, updateUserDetails);
 
 export default router;
