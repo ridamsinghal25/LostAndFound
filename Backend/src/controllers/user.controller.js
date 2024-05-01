@@ -2,7 +2,10 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { User } from "../models/user.model.js";
-import { uploadToCloudinary } from "../utils/cloudinary.js";
+import {
+  deleteFromCloudinary,
+  uploadToCloudinary,
+} from "../utils/cloudinary.js";
 import bcrypt from "bcryptjs";
 
 const generateAccessTokenAndRefreshToken = async (userId) => {
@@ -194,10 +197,56 @@ const updateUserDetails = asyncHandler(async (req, res) => {
     );
 });
 
+const updateUserAvatar = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+  const avatarLocalPath = req.file?.path;
+
+  if (!avatarLocalPath) {
+    throw new ApiError(400, "Avatar file is required");
+  }
+
+  const avatar = await uploadToCloudinary(avatarLocalPath);
+
+  if (!avatar) {
+    throw new ApiError(500, "Something went wrong while updating user avatar");
+  }
+
+  const user = await User.findById(userId);
+
+  if (!user) {
+    throw new ApiError(404, "user not found");
+  }
+
+  const oldAvatarPublicId = user.avatar?.public_id;
+
+  user.avatar = {
+    public_id: avatar.public_id,
+    url: avatar.url,
+  };
+
+  const updatedUser = await user.save({ validateBeforeSave: false });
+
+  const deleteOldAvatar = await deleteFromCloudinary(
+    oldAvatarPublicId,
+    "image"
+  );
+
+  if (deleteOldAvatar.result !== "ok") {
+    throw new ApiError(500, "Something went wrong while deleting user avatar");
+  }
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, updatedUser, "user avatar updated successfully")
+    );
+});
+
 export {
   registerUser,
   loginUser,
   logoutUser,
   getCurrentUserDetails,
   updateUserDetails,
+  updateUserAvatar,
 };
