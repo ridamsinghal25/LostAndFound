@@ -2,15 +2,18 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { Item } from "../models/item.model.js";
-import { uploadToCloudinary } from "../utils/cloudinary.js";
+import { User } from "../models/user.model.js";
+import {
+  deleteFromCloudinary,
+  uploadToCloudinary,
+} from "../utils/cloudinary.js";
 import { isValidObjectId } from "mongoose";
 
 const registerLostItem = asyncHandler(async (req, res) => {
-  const { itemName, placeAtItemLost, username, phoneNumber, description } =
-    req.body;
+  const { itemName, placeAtItemLost, description } = req.body;
 
   if (
-    [itemName, placeAtItemLost, username, phoneNumber, description].some(
+    [itemName, placeAtItemLost, description].some(
       (field) => field?.trim() === "" || !field
     )
   ) {
@@ -26,21 +29,18 @@ const registerLostItem = asyncHandler(async (req, res) => {
   const itemPhoto = await uploadToCloudinary(itemPhotoLocalPath);
 
   if (!itemPhoto) {
-    throw new ApiError(500, "Error while uploading avatar file");
+    throw new ApiError(500, "Error while uploading item photo file");
   }
 
   const item = await Item.create({
     itemName,
     placeAtItemLost,
-    username,
-    phoneNumber: parseInt(phoneNumber),
+    owner: req.user._id,
     description,
-    photos: [
-      {
-        public_id: itemPhoto.public_id,
-        url: itemPhoto.url,
-      },
-    ],
+    itemPhoto: {
+      public_id: itemPhoto.public_id,
+      url: itemPhoto.url,
+    },
   });
 
   if (!item) {
@@ -52,16 +52,42 @@ const registerLostItem = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, item, "Item registered successfully"));
 });
 
-const getLostItem = asyncHandler(async (req, res) => {
-  const item = await Item.find({ type: "lost" });
+const updateLostItem = asyncHandler();
 
-  if (!item) {
-    throw new ApiError(404, "item not found");
+const getLostItem = asyncHandler(async (_, res) => {
+  const lostItems = await Item.aggregate([
+    {
+      $match: {
+        type: "lost",
+      },
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "owner",
+        foreignField: "_id",
+        as: "owner",
+        pipeline: [
+          {
+            $project: {
+              _id: 1,
+              fullName: 1,
+              phoneNumber: 1,
+              avatar: 1,
+            },
+          },
+        ],
+      },
+    },
+  ]);
+
+  if (!lostItems || lostItems.length === 0) {
+    return res.status(200).json(new ApiResponse(200, {}, "No lost item"));
   }
 
   return res
     .status(200)
-    .json(new ApiResponse(200, item, "item received successfully"));
+    .json(new ApiResponse(200, lostItems, "lost item retrieved successfully"));
 });
 
 const deleteLostItem = asyncHandler(async (req, res) => {
@@ -71,10 +97,27 @@ const deleteLostItem = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Invalid item id");
   }
 
-  const item = await Item.findByIdAndDelete(itemId);
+  const item = await Item.findById(itemId);
 
   if (!item) {
     throw new ApiError(400, "item not found");
+  }
+
+  const itemPhotoPublicId = item.itemPhoto.public_id;
+
+  const deleteItemPhoto = await deleteFromCloudinary(
+    itemPhotoPublicId,
+    "image"
+  );
+
+  if (deleteItemPhoto.result !== "ok") {
+    throw new ApiError(500, "Something went wrong while deleting item photo");
+  }
+
+  const deleteItem = await item.deleteOne();
+
+  if (deleteItem.deletedCount !== 1) {
+    throw new ApiError(500, "Something went wrong while deleting item");
   }
 
   return res
@@ -110,22 +153,48 @@ const itemFound = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, item, "item found successfully"));
 });
 
-const getFoundItem = asyncHandler(async (req, res) => {
-  const item = await Item.find({ type: "found" });
+const getFoundItems = asyncHandler(async (req, res) => {
+  const foundItems = await Item.aggregate([
+    {
+      $match: {
+        type: "found",
+      },
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "owner",
+        foreignField: "_id",
+        as: "owner",
+        pipeline: [
+          {
+            $project: {
+              _id: 1,
+              fullName: 1,
+              phoneNumber: 1,
+              avatar: 1,
+            },
+          },
+        ],
+      },
+    },
+  ]);
 
-  if (!item) {
-    throw new ApiError(404, "item not found");
+  if (!foundItems || foundItems.length === 0) {
+    return res.status(200).json(new ApiResponse(200, {}, "No found item"));
   }
 
   return res
     .status(200)
-    .json(new ApiResponse(200, item, "item received successfully"));
+    .json(new ApiResponse(200, foundItems, "lost item retrieved successfully"));
 });
+
+const getLostItemOfUser = asyncHandler();
 
 export {
   registerLostItem,
   getLostItem,
   deleteLostItem,
   itemFound,
-  getFoundItem,
+  getFoundItems,
 };
