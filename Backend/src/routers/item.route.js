@@ -6,7 +6,7 @@ import {
   itemFound,
   registerLostItem,
   getLostItem,
-  getFoundItem,
+  getFoundItems,
 } from "../controllers/item.controller.js";
 
 const router = Router();
@@ -21,6 +21,6 @@ router.route("/delete-item/:itemId").delete(verifyJWT, deleteLostItem);
 
 router.route("/item-found/:itemId").patch(verifyJWT, itemFound);
 
-router.route("/found-item").get(verifyJWT, getFoundItem);
+router.route("/found-item").get(verifyJWT, getFoundItems);
 
 export default router;
