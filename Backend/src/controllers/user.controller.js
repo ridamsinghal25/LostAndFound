@@ -242,6 +242,36 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
     );
 });
 
+const changeUserPassword = asyncHandler(async (req, res) => {
+  const { oldPassword, newPassword } = req.body;
+
+  if (!oldPassword || !newPassword) {
+    throw new ApiError(400, "All fields are required");
+  }
+
+  const user = await User.findById(req.user._id);
+
+  if (!user) {
+    throw new ApiError(404, "user not found");
+  }
+
+  const isPasswordValid = await user.isPasswordCorrect(oldPassword);
+
+  if (!isPasswordValid) {
+    throw new ApiError(401, "Invalid password");
+  }
+
+  const hashedPassword = await bcrypt.hash(newPassword, 12);
+
+  user.password = hashedPassword;
+
+  await user.save({ validateBeforeSave: false });
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, {}, "user password upadated successfully"));
+});
+
 export {
   registerUser,
   loginUser,
@@ -249,4 +279,5 @@ export {
   getCurrentUserDetails,
   updateUserDetails,
   updateUserAvatar,
+  changeUserPassword,
 };
