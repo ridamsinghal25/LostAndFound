@@ -7,6 +7,7 @@ import {
   registerLostItem,
   getLostItem,
   getFoundItems,
+  updateLostItemDetails,
 } from "../controllers/item.controller.js";
 
 const router = Router();
@@ -14,6 +15,8 @@ const router = Router();
 router
   .route("/register-lost-item")
   .post(verifyJWT, upload.single("itemPhoto"), registerLostItem);
+
+router.route("/update-item/:itemId").patch(verifyJWT, updateLostItemDetails);
 
 router.route("/lost-item").get(verifyJWT, getLostItem);
 

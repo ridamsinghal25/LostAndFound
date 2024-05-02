@@ -2,7 +2,6 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { Item } from "../models/item.model.js";
-import { User } from "../models/user.model.js";
 import {
   deleteFromCloudinary,
   uploadToCloudinary,
@@ -52,7 +51,44 @@ const registerLostItem = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, item, "Item registered successfully"));
 });
 
-const updateLostItem = asyncHandler();
+const updateLostItemDetails = asyncHandler(async (req, res) => {
+  const { itemName, placeAtItemLost, description } = req.body;
+  const { itemId } = req.params;
+
+  if (
+    [itemName, placeAtItemLost, description].some(
+      (field) => field?.trim() === "" || !field
+    )
+  ) {
+    throw new ApiError(400, "All fields are required");
+  }
+
+  if (!isValidObjectId(itemId)) {
+    throw new ApiError(401, "Invalid item id");
+  }
+
+  const updatedItem = await Item.findByIdAndUpdate(
+    itemId,
+    {
+      $set: {
+        itemName,
+        placeAtItemLost,
+        description,
+      },
+    },
+    { new: true }
+  );
+
+  if (!updatedItem) {
+    throw new ApiError(500, "Something went wrong while updating item");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, updatedItem, "item updated successfully"));
+});
+
+const updateLostItemPhoto = asyncHandler();
 
 const getLostItem = asyncHandler(async (_, res) => {
   const lostItems = await Item.aggregate([
@@ -191,8 +227,11 @@ const getFoundItems = asyncHandler(async (req, res) => {
 
 const getLostItemOfUser = asyncHandler();
 
+const getItemById = asyncHandler();
+
 export {
   registerLostItem,
+  updateLostItemDetails,
   getLostItem,
   deleteLostItem,
   itemFound,
