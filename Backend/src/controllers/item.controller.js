@@ -260,7 +260,38 @@ const getFoundItems = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, foundItems, "lost item retrieved successfully"));
 });
 
-const getLostItemsOfUser = asyncHandler();
+const getUserLostItems = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+
+  if (!isValidObjectId(userId)) {
+    throw new ApiError(400, "Invalid user id");
+  }
+
+  const userLostItems = await Item.aggregate([
+    {
+      $match: {
+        $and: [{ owner: userId }, { type: "lost" }],
+      },
+    },
+    ...userCommonAggregationPipeline(),
+  ]);
+
+  if (userLostItems.length === 0) {
+    return res
+      .status(200)
+      .json(new ApiResponse(200, [], "User have no lost item"));
+  }
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        userLostItems,
+        "user lost items retrieved successfully"
+      )
+    );
+});
 
 const getItemById = asyncHandler();
 
@@ -272,4 +303,5 @@ export {
   deleteLostItem,
   itemFound,
   getFoundItems,
+  getUserLostItems,
 };
