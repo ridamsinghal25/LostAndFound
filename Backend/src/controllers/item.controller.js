@@ -326,7 +326,23 @@ const getUserFoundItems = asyncHandler(async (req, res) => {
     );
 });
 
-const getItemById = asyncHandler();
+const getItemById = asyncHandler(async (req, res) => {
+  const itemId = req.params.itemId;
+
+  if (!isValidObjectId(itemId)) {
+    throw new ApiError(400, "Invalid item id");
+  }
+
+  const item = await Item.findById(itemId);
+
+  if (!item) {
+    throw new ApiError(404, "Item not found");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, item, "Item retrieved successfully"));
+});
 
 export {
   registerLostItem,
@@ -338,4 +354,5 @@ export {
   getFoundItems,
   getUserLostItems,
   getUserFoundItems,
+  getItemById,
 };
