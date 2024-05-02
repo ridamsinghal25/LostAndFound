@@ -88,7 +88,53 @@ const updateLostItemDetails = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, updatedItem, "item updated successfully"));
 });
 
-const updateLostItemPhoto = asyncHandler();
+const updateLostItemPhoto = asyncHandler(async (req, res) => {
+  const { itemId } = req.params;
+
+  if (!isValidObjectId(itemId)) {
+    throw new ApiError(400, "Invalid item id");
+  }
+
+  const itemPhotoLocalPath = req.file?.path;
+
+  if (!itemPhotoLocalPath) {
+    throw new ApiError(400, "item photo is required");
+  }
+
+  const item = await Item.findById(itemId);
+
+  if (!item) {
+    throw new ApiError(404, "Item not found");
+  }
+
+  const oldItemPhotoPublicId = item.itemPhoto?.public_id;
+
+  const newItemPhoto = await uploadToCloudinary(itemPhotoLocalPath);
+
+  if (!newItemPhoto) {
+    throw new ApiError(500, "Something went wrong while uploading item photo");
+  }
+
+  item.itemPhoto = {
+    public_id: newItemPhoto.public_id,
+    url: newItemPhoto.url,
+  };
+
+  const updatedItem = await item.save({ validateBeforeSave: false });
+
+  const deleteItemPhoto = await deleteFromCloudinary(
+    oldItemPhotoPublicId,
+    "image"
+  );
+
+  if (deleteItemPhoto.result !== "ok") {
+    throw new ApiError(500, "Something went wrong while deleting item photo");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, updatedItem, "item photo updated successfully"));
+});
 
 const getLostItem = asyncHandler(async (_, res) => {
   const lostItems = await Item.aggregate([
@@ -232,6 +278,7 @@ const getItemById = asyncHandler();
 export {
   registerLostItem,
   updateLostItemDetails,
+  updateLostItemPhoto,
   getLostItem,
   deleteLostItem,
   itemFound,
