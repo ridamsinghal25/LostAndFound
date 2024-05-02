@@ -8,6 +8,29 @@ import {
 } from "../utils/cloudinary.js";
 import { isValidObjectId } from "mongoose";
 
+const userCommonAggregationPipeline = () => {
+  return [
+    {
+      $lookup: {
+        from: "users",
+        localField: "owner",
+        foreignField: "_id",
+        as: "owner",
+        pipeline: [
+          {
+            $project: {
+              _id: 1,
+              fullName: 1,
+              phoneNumber: 1,
+              avatar: 1,
+            },
+          },
+        ],
+      },
+    },
+  ];
+};
+
 const registerLostItem = asyncHandler(async (req, res) => {
   const { itemName, placeAtItemLost, description } = req.body;
 
@@ -143,24 +166,7 @@ const getLostItem = asyncHandler(async (_, res) => {
         type: "lost",
       },
     },
-    {
-      $lookup: {
-        from: "users",
-        localField: "owner",
-        foreignField: "_id",
-        as: "owner",
-        pipeline: [
-          {
-            $project: {
-              _id: 1,
-              fullName: 1,
-              phoneNumber: 1,
-              avatar: 1,
-            },
-          },
-        ],
-      },
-    },
+    ...userCommonAggregationPipeline(),
   ]);
 
   if (!lostItems || lostItems.length === 0) {
@@ -242,24 +248,7 @@ const getFoundItems = asyncHandler(async (req, res) => {
         type: "found",
       },
     },
-    {
-      $lookup: {
-        from: "users",
-        localField: "owner",
-        foreignField: "_id",
-        as: "owner",
-        pipeline: [
-          {
-            $project: {
-              _id: 1,
-              fullName: 1,
-              phoneNumber: 1,
-              avatar: 1,
-            },
-          },
-        ],
-      },
-    },
+    ...userCommonAggregationPipeline(),
   ]);
 
   if (!foundItems || foundItems.length === 0) {
@@ -271,7 +260,7 @@ const getFoundItems = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, foundItems, "lost item retrieved successfully"));
 });
 
-const getLostItemOfUser = asyncHandler();
+const getLostItemsOfUser = asyncHandler();
 
 const getItemById = asyncHandler();
 
