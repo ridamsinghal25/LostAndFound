@@ -9,6 +9,8 @@ import {
   getFoundItems,
   updateLostItemDetails,
   updateLostItemPhoto,
+  getUserLostItems,
+  getUserFoundItems,
 } from "../controllers/item.controller.js";
 
 const router = Router();
@@ -30,5 +32,9 @@ router.route("/delete-item/:itemId").delete(verifyJWT, deleteLostItem);
 router.route("/item-found/:itemId").patch(verifyJWT, itemFound);
 
 router.route("/found-item").get(verifyJWT, getFoundItems);
+
+router.route("/user-lost-items").get(verifyJWT, getUserLostItems);
+
+router.route("/user-found-items").get(verifyJWT, getUserFoundItems);
 
 export default router;
