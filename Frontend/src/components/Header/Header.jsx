@@ -64,7 +64,7 @@ function Header() {
                   </li>
                   <li className="w-full">
                     <NavLink
-                      to="/list-item"
+                      to="/add-item"
                       className={({ isActive }) =>
                         `flex w-full items-center justify-start ${
                           isActive

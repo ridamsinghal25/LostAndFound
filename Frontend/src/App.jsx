@@ -37,7 +37,7 @@ function App() {
           }
         />
         <Route
-          path="/list-item"
+          path="/add-item"
           element={
             <AuthLayout authentication>
               <AddItem />

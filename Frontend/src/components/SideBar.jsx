@@ -25,7 +25,7 @@ function SideBar() {
         </li>
         <li className="hidden sm:block ">
           <NavLink
-            to="/list-item"
+            to="/add-item"
             className={({ isActive }) =>
               `flex flex-col items-center justify-center ${
                 isActive ? "bg-[#ae7aff] border-white" : "bg-[#121212]"

@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import itemService from "../api/item";
 import { PhotoAddIcon } from "../assets";
 
-function ListItem() {
+function AddItem() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const {
@@ -226,4 +226,4 @@ function ListItem() {
   );
 }
 
-export default ListItem;
+export default AddItem;
