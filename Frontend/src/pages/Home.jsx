@@ -1,10 +1,10 @@
 import React from "react";
-import AllItems from "./AllItems";
+import AllLostItems from "./AllLostItems";
 
 function Home() {
   return (
     <div>
-      <AllItems />
+      <AllLostItems />
     </div>
   );
 }
