@@ -45,6 +45,14 @@ function App() {
           }
         />
         <Route
+          path="/update-item"
+          element={
+            <AuthLayout authentication>
+              <h1>Update Item</h1>
+            </AuthLayout>
+          }
+        />
+        <Route
           path="/found-item"
           element={
             <AuthLayout authentication>
