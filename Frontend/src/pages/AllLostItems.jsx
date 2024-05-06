@@ -4,12 +4,15 @@ import itemService from "../api/item";
 import { useNavigate } from "react-router-dom";
 import { SideBar } from "../components";
 import { Item } from "../assets";
+import { useSelector } from "react-redux";
 
-function AllItems() {
+function AllLostItems() {
   const [loading, setLoading] = useState(false);
   const [lostItems, setLostItems] = useState([]);
   const [itemFound, setItemFound] = useState(false);
+  const [updateItem, setUpdateItem] = useState(false);
   const navigate = useNavigate();
+  const userData = useSelector((state) => state.auth.userData);
 
   useEffect(() => {
     setLoading(true);
@@ -20,19 +23,27 @@ function AllItems() {
         setLostItems(items);
       })
       .catch((err) => {
-        console.log("Error in AllItems: ", err);
+        console.log("Error in AllLostItems: ", err);
       })
       .finally(() => {
         setLoading(false);
       });
   }, []);
 
-  function closeModel() {
+  function closeFoundModel() {
     setItemFound(false);
   }
 
-  function openModel() {
+  function openFoundModel() {
     setItemFound(true);
+  }
+
+  function closeUpdateModel() {
+    setUpdateItem(false);
+  }
+
+  function openUpdateModel() {
+    setUpdateItem(true);
   }
 
   function handleFound(itemId) {
@@ -55,22 +66,41 @@ function AllItems() {
                     <div>
                       <ListItems item={item} />
                     </div>
-                    <div className="flex flex-row-reverse mb-10px">
+                    <div className="flex flex-row-reverse gap-4 mb-10px">
+                      {userData._id === item.owner[0]._id ? (
+                        <div className="flex flex-row-reverse mb-10px">
+                          <Button
+                            onClick={openUpdateModel}
+                            className="w-50% mt-1 bg-[#08ec5f] p-2 text-center font-bold text-black shadow-[5px_5px_0px_0px_#4f4e4e] transition-all duration-150 ease-in-out active:translate-x-[5px] active:translate-y-[5px] active:shadow-[0px_0px_0px_0px_#4f4e4e]"
+                          >
+                            Update Item
+                          </Button>
+                          {updateItem && (
+                            <Model
+                              key={item._id}
+                              message={"Do you really want to update item?"}
+                              confirmButton={() => navigate("/update-item")}
+                              closeModel={closeUpdateModel}
+                              buttonName={"Update"}
+                            />
+                          )}
+                        </div>
+                      ) : null}
                       <Button
-                        onClick={openModel}
+                        onClick={openFoundModel}
                         className="w-50% mt-1 bg-[#08ec5f] p-2 text-center font-bold text-black shadow-[5px_5px_0px_0px_#4f4e4e] transition-all duration-150 ease-in-out active:translate-x-[5px] active:translate-y-[5px] active:shadow-[0px_0px_0px_0px_#4f4e4e]"
                       >
                         Item Found
                       </Button>
+                      {itemFound && (
+                        <Model
+                          key={item._id}
+                          message={"Are you sure you found the item?"}
+                          confirmButton={() => handleFound(item._id)}
+                          closeModel={closeFoundModel}
+                        />
+                      )}
                     </div>
-                    {itemFound && (
-                      <Model
-                        key={item._id}
-                        message={"Are you sure you found the item?"}
-                        confirmButton={() => handleFound(item._id)}
-                        closeModel={closeModel}
-                      />
-                    )}
                   </div>
                 ))
               ) : (
@@ -91,4 +121,4 @@ function AllItems() {
   );
 }
 
-export default AllItems;
+export default AllLostItems;
