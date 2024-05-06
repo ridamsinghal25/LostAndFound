@@ -8,7 +8,7 @@ function ListItems({ item }) {
           <div className="w-full pt-[56%] md:pt-[56%]">
             <div className="absolute inset-0">
               <img
-                src={item.photos[0].url}
+                src={item.itemPhoto.url}
                 alt="Image not found"
                 className="h-full w-full"
               />
