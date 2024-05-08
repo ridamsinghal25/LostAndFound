@@ -10,6 +10,7 @@ import SideBar from "./SideBar";
 import ListItems from "./ListItems";
 import Model from "./Model";
 import ItemForm from "./ItemForm";
+import ProfileForm from "./ProfileForm";
 
 export {
   Input,
@@ -24,4 +25,5 @@ export {
   ListItems,
   Model,
   ItemForm,
+  ProfileForm,
 };
