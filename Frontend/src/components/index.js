@@ -9,6 +9,7 @@ import AuthButtons from "./Header/AuthButtons";
 import SideBar from "./SideBar";
 import ListItems from "./ListItems";
 import Model from "./Model";
+import ItemForm from "./ItemForm";
 
 export {
   Input,
@@ -22,4 +23,5 @@ export {
   SideBar,
   ListItems,
   Model,
+  ItemForm,
 };
