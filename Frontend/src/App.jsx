@@ -7,6 +7,8 @@ import AddItem from "./pages/AddItem.jsx";
 import FoundItem from "./pages/FoundItem.jsx";
 import PageNotFound from "./pages/PageNotFound.jsx";
 import UpdateItem from "./pages/UpdateItem.jsx";
+import UserLostItems from "./pages/UserLostItems.jsx";
+import UserFoundItems from "./pages/UserFoundItems.jsx";
 
 function App() {
   return (
@@ -62,9 +64,19 @@ function App() {
           }
         />
         <Route
-          path="/setting"
+          path="/user-lost-items"
           element={
-            <AuthLayout authentication>{/* <FoundItem /> */}</AuthLayout>
+            <AuthLayout authentication>
+              <UserLostItems />
+            </AuthLayout>
+          }
+        />
+        <Route
+          path="/user-found-items"
+          element={
+            <AuthLayout authentication>
+              <UserFoundItems />
+            </AuthLayout>
           }
         />
 
