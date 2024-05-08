@@ -2,7 +2,7 @@ import React from "react";
 
 function ListItems({ item }) {
   return (
-    <div key={item._id} className="mb-20">
+    <div key={item._id}>
       <div className="w-full max-w-3xl gap-x-4 md:flex">
         <div className="relative mb-2 w-full md:mb-0 md:w-5/12">
           <div className="w-full pt-[56%] md:pt-[56%]">
@@ -31,7 +31,7 @@ function ListItems({ item }) {
                 Phone: {item.phoneNumber}
               </p>
             </div>
-            <p className="mt-2 hidden text-sm md:block">
+            <p className="mt-2  text-sm md:block">
               Specific Description: {item.description}
             </p>
           </div>
