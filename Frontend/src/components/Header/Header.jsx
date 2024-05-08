@@ -134,23 +134,6 @@ function Header() {
                       </span>
                     </NavLink>
                   </li>
-                  <li className="w-full">
-                    <NavLink
-                      to="/setting"
-                      className={({ isActive }) =>
-                        `flex w-full items-center justify-start ${
-                          isActive
-                            ? "bg-[#ae7aff] border-white"
-                            : "bg-[#121212]"
-                        } gap-x-4 border border-white px-4 py-1.5 text-left hover:bg-[#ae7aff] hover:text-black focus:border-[#ae7aff] focus:bg-[#ae7aff] focus:text-black`
-                      }
-                    >
-                      <span className="inline-block w-full max-w-[20px] group-hover:mr-4 lg:mr-4">
-                        <SettingIcon />
-                      </span>
-                      <span>Setting</span>
-                    </NavLink>
-                  </li>
                 </ul>
                 <div className="mb-8 mt-auto  flex w-full flex-wrap gap-4 px-4 sm:mb-0 sm:mt-0 sm:items-center sm:px-0">
                   <AuthButtons />

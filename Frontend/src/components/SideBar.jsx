@@ -91,23 +91,6 @@ function SideBar() {
             </span>
           </NavLink>
         </li>
-        <li className="hidden sm:block ">
-          <NavLink
-            to="/profile"
-            className={({ isActive }) =>
-              `flex flex-col items-center justify-center ${
-                isActive ? "bg-[#ae7aff] border-white" : "bg-[#121212]"
-              } border-white py-1 focus:text-[#ae7aff] sm:w-full sm:flex-row sm:border sm:p-1.5 sm:hover:bg-[#ae7aff] sm:hover:text-black sm:focus:border-[#ae7aff] sm:focus:bg-[#ae7aff] sm:focus:text-black sm:group-hover:justify-start sm:group-hover:px-4 lg:justify-start lg:px-4`
-            }
-          >
-            <span className="inline-block w-5 shrink-0 sm:group-hover:mr-4 lg:mr-4 text-white">
-              <SettingIcon />
-            </span>
-            <span className="block sm:hidden sm:group-hover:inline lg:inline text-white">
-              Setting
-            </span>
-          </NavLink>
-        </li>
       </ul>
     </aside>
   );
