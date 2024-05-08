@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import ReactDOM from "react-dom";
 
 function Model({ message, confirmButton, closeModel, buttonName = "" }) {
   useEffect(() => {
@@ -8,15 +9,17 @@ function Model({ message, confirmButton, closeModel, buttonName = "" }) {
     };
   }, []);
 
-  return (
+  return ReactDOM.createPortal(
     <>
       <div
         onClick={closeModel}
         className="fixed inset-0 bg-gray-700 bg-opacity-90"
       ></div>
       <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 max-w-30rem p-8 rounded-lg bg-black">
-        <h2 className="text-2.5xl font-worksans font-black">STAY TUNED</h2>
-        <p className="text-base font-sourceserifpro my-4 lg:my-6 leading-tight font-normal">
+        <h2 className="text-2.5xl font-worksans font-black text-white">
+          STAY TUNED
+        </h2>
+        <p className="text-base font-sourceserifpro my-4 lg:my-6 leading-tight font-normal text-white">
           {message}
         </p>
         <button
@@ -26,7 +29,8 @@ function Model({ message, confirmButton, closeModel, buttonName = "" }) {
           {buttonName ? buttonName : "Confirm"}
         </button>
       </div>
-    </>
+    </>,
+    document.querySelector(".myModalPortal")
   );
 }
 
