@@ -3,15 +3,17 @@ import itemService from "../api/item";
 import { Loader, ListItems } from "../components";
 import { Item } from "../assets";
 import { SideBar } from "../components";
+import { useSelector } from "react-redux";
 
 function FoundItem() {
   const [loading, setLoading] = useState(false);
   const [founditem, setFoundItem] = useState([]);
+  const userData = useSelector((state) => state.auth.userData);
 
   useEffect(() => {
     setLoading(true);
     itemService
-      .getFoundItem()
+      .getFoundItems({ userId: userData._id })
       .then((response) => {
         const items = response.data.data;
         setFoundItem(items);

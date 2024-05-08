@@ -17,7 +17,7 @@ function AllLostItems() {
   useEffect(() => {
     setLoading(true);
     itemService
-      .getLostItem()
+      .getLostItems()
       .then((response) => {
         const items = response.data.data;
         setLostItems(items);
@@ -79,7 +79,9 @@ function AllLostItems() {
                             <Model
                               key={item._id}
                               message={"Do you really want to update item?"}
-                              confirmButton={() => navigate("/update-item")}
+                              confirmButton={() =>
+                                navigate(`/update-item/${item._id}`)
+                              }
                               closeModel={closeUpdateModel}
                               buttonName={"Update"}
                             />
