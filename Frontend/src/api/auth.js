@@ -1,14 +1,13 @@
 import { apiClient } from "../Interceptors/axios";
 
 class AuthService {
-  createAccount({ fullName, email, password, username, phoneNumber, avatar }) {
+  createAccount({ fullName, email, password, phoneNumber, avatar }) {
     try {
       const formData = new FormData();
       formData.append("fullName", fullName);
       formData.append("email", email);
       formData.append("phoneNumber", phoneNumber);
       formData.append("password", password);
-      formData.append("username", username);
       formData.append("avatar", avatar[0]);
 
       return apiClient.post("users/register", formData);
