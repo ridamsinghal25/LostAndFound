@@ -32,7 +32,7 @@ function Signup() {
   };
 
   return (
-    <div className="min-h-screen bg-[#121212]">
+    <div className="h-screen overflow-y-auto bg-[#121212]">
       <div className="mx-auto flex w-full items-stretch justify-between gap-10">
         <div className="fixed left-0 top-0 hidden h-screen w-0 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 md:block md:w-1/3"></div>
         <div className="ml-auto mt-28 flex w-full flex-col items-start justify-start p-6 sm:max-w-4xl md:w-2/3 lg:px-10">
