@@ -1,22 +1,19 @@
 import { apiClient } from "../Interceptors/axios";
 
 class ItemService {
-  registerLostItem({
-    itemName,
-    placeAtItemLost,
-    username,
-    phoneNumber,
-    description,
-    itemPhoto,
-  }) {
+  registerLostItem({ itemName, placeAtItemLost, itemPhoto, description }) {
     try {
       const formData = new FormData();
       formData.append("itemName", itemName);
       formData.append("placeAtItemLost", placeAtItemLost);
-      formData.append("username", username);
-      formData.append("phoneNumber", phoneNumber);
       formData.append("description", description);
       formData.append("itemPhoto", itemPhoto[0]);
+      console.log("In item.js: ", {
+        itemName,
+        placeAtItemLost,
+        description,
+        itemPhoto,
+      });
 
       return apiClient.post("items/register-lost-item", formData);
     } catch (error) {
@@ -24,7 +21,7 @@ class ItemService {
     }
   }
 
-  getLostItem() {
+  getLostItems() {
     try {
       return apiClient.get(`items/lost-item`);
     } catch (error) {
@@ -32,7 +29,7 @@ class ItemService {
     }
   }
 
-  getFoundItem() {
+  getFoundItems() {
     try {
       return apiClient.get(`items/found-item`);
     } catch (error) {
@@ -53,6 +50,36 @@ class ItemService {
       return apiClient.patch(`items/item-found/${itemId}`);
     } catch (error) {
       console.log("Error while founding: ", error);
+    }
+  }
+
+  getItemById({ itemId }) {
+    try {
+      return apiClient.get(`items/get-item/${itemId}`);
+    } catch (error) {
+      console.log("Error while getting item: ", error);
+    }
+  }
+
+  updateItemDetails({ itemId, itemName, placeAtItemLost, description }) {
+    try {
+      return apiClient.patch(`items/update-item/${itemId}`, {
+        itemName,
+        placeAtItemLost,
+        description,
+      });
+    } catch (error) {
+      console.log("Error while updating item details: ", error);
+    }
+  }
+
+  updateItemPhoto({ itemId, itemPhoto }) {
+    try {
+      const formData = new FormData();
+      formData.append("itemPhoto", itemPhoto[0]);
+      return apiClient.patch(`items/update-itemphoto/${itemId}`, formData);
+    } catch (error) {
+      console.log("Error while updating item photo: ", error);
     }
   }
 }
