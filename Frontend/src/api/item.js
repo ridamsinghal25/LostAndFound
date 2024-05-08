@@ -82,6 +82,22 @@ class ItemService {
       console.log("Error while updating item photo: ", error);
     }
   }
+
+  getUserLostItems() {
+    try {
+      return apiClient.get(`items/user-lost-items`);
+    } catch (error) {
+      console.log("Error while getting user lost items: ", error);
+    }
+  }
+
+  getUserFoundItems() {
+    try {
+      return apiClient.get(`items/user-found-items`);
+    } catch (error) {
+      console.log("Error while getting user found items: ", error);
+    }
+  }
 }
 
 const itemService = new ItemService();
