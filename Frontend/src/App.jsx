@@ -6,6 +6,7 @@ import Home from "./pages/Home.jsx";
 import AddItem from "./pages/AddItem.jsx";
 import FoundItem from "./pages/FoundItem.jsx";
 import PageNotFound from "./pages/PageNotFound.jsx";
+import UpdateItem from "./pages/UpdateItem.jsx";
 
 function App() {
   return (
@@ -45,10 +46,10 @@ function App() {
           }
         />
         <Route
-          path="/update-item"
+          path="/update-item/:itemId"
           element={
             <AuthLayout authentication>
-              <h1>Update Item</h1>
+              <UpdateItem />
             </AuthLayout>
           }
         />
