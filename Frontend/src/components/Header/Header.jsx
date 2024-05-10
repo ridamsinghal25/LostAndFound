@@ -96,42 +96,38 @@ function Header() {
                       <span>Found Item</span>
                     </NavLink>
                   </li>
-                  <li className="hidden sm:block ">
+                  <li className="w-full">
                     <NavLink
                       to="/user-lost-items"
                       className={({ isActive }) =>
-                        `flex flex-col items-center justify-center ${
+                        `flex w-full items-center justify-start ${
                           isActive
                             ? "bg-[#ae7aff] border-white"
                             : "bg-[#121212]"
-                        } border-white py-1 focus:text-[#ae7aff] sm:w-full sm:flex-row sm:border sm:p-1.5 sm:hover:bg-[#ae7aff] sm:hover:text-black sm:focus:border-[#ae7aff] sm:focus:bg-[#ae7aff] sm:focus:text-black sm:group-hover:justify-start sm:group-hover:px-4 lg:justify-start lg:px-4`
+                        } gap-x-4 border border-white px-4 py-1.5 text-left hover:bg-[#ae7aff] hover:text-black focus:border-[#ae7aff] focus:bg-[#ae7aff] focus:text-black`
                       }
                     >
-                      <span className="inline-block w-5 shrink-0 sm:group-hover:mr-4 lg:mr-4 text-white">
+                      <span className="inline-block w-full max-w-[20px] group-hover:mr-4 lg:mr-4">
                         <CollectionIcon />
                       </span>
-                      <span className="block sm:hidden sm:group-hover:inline lg:inline text-white">
-                        Your lost Items
-                      </span>
+                      <span>Your lost Items</span>
                     </NavLink>
                   </li>
-                  <li className="hidden sm:block ">
+                  <li className="w-full">
                     <NavLink
                       to="/user-found-items"
                       className={({ isActive }) =>
-                        `flex flex-col items-center justify-center ${
+                        `flex w-full items-center justify-start ${
                           isActive
                             ? "bg-[#ae7aff] border-white"
                             : "bg-[#121212]"
-                        } border-white py-1 focus:text-[#ae7aff] sm:w-full sm:flex-row sm:border sm:p-1.5 sm:hover:bg-[#ae7aff] sm:hover:text-black sm:focus:border-[#ae7aff] sm:focus:bg-[#ae7aff] sm:focus:text-black sm:group-hover:justify-start sm:group-hover:px-4 lg:justify-start lg:px-4`
+                        } gap-x-4 border border-white px-4 py-1.5 text-left hover:bg-[#ae7aff] hover:text-black focus:border-[#ae7aff] focus:bg-[#ae7aff] focus:text-black`
                       }
                     >
-                      <span className="inline-block w-5 shrink-0 sm:group-hover:mr-4 lg:mr-4 text-white">
+                      <span className="inline-block w-full max-w-[20px] group-hover:mr-4 lg:mr-4">
                         <CollectionIcon />
                       </span>
-                      <span className="block sm:hidden sm:group-hover:inline lg:inline text-white">
-                        Your found Items
-                      </span>
+                      <span>Your found Items</span>
                     </NavLink>
                   </li>
                 </ul>
