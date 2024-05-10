@@ -8,12 +8,6 @@ class ItemService {
       formData.append("placeAtItemLost", placeAtItemLost);
       formData.append("description", description);
       formData.append("itemPhoto", itemPhoto[0]);
-      console.log("In item.js: ", {
-        itemName,
-        placeAtItemLost,
-        description,
-        itemPhoto,
-      });
 
       return apiClient.post("items/register-lost-item", formData);
     } catch (error) {

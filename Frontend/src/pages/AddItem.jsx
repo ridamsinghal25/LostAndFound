@@ -10,7 +10,6 @@ function AddItem() {
   const addLostItem = async (data) => {
     setError("");
     try {
-      console.log(data);
       const registerItem = await itemService.registerLostItem(data);
 
       if (registerItem) {
