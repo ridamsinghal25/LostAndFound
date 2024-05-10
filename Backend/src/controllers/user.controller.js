@@ -182,8 +182,7 @@ const updateUserDetails = asyncHandler(async (req, res) => {
         phoneNumber,
       },
     },
-    { runValidators: true },
-    { new: true }
+    { runValidators: true, new: true }
   ).select("-password -refreshToken");
 
   if (!updatedUser) {
