@@ -67,7 +67,7 @@ function AllLostItems() {
                       <ListItems item={item} />
                     </div>
                     <div className="flex flex-row-reverse gap-4 mb-10px">
-                      {userData?._id === item.owner[0]._id ? (
+                      {userData?._id === item.owner[0]?._id ? (
                         <div className="flex flex-row-reverse mb-10px">
                           <Button
                             onClick={openUpdateModel}
